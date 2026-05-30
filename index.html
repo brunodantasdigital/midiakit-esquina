@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mídia Kit — Esquina Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07020f;--glass-bg:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.09);
+  --accent:#7c3aed;--accent2:#a855f7;--accent3:#c084fc;
+  --text:#f5f0ff;--text2:rgba(245,240,255,.55);
+  --radius:14px;--blur:blur(18px);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* BLOBS */
+.blob{position:fixed;border-radius:50%;pointer-events:none;z-index:0;animation:blobMove 12s ease-in-out infinite}
+.blob1{width:600px;height:600px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(124,58,237,.18) 0%,transparent 70%);animation-delay:0s}
+.blob2{width:500px;height:500px;bottom:-150px;right:-100px;background:radial-gradient(circle,rgba(168,85,247,.15) 0%,transparent 70%);animation-delay:-6s}
+.blob3{width:400px;height:400px;top:40%;left:60%;background:radial-gradient(circle,rgba(192,132,252,.1) 0%,transparent 70%);animation-delay:-3s}
+@keyframes blobMove{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.05)}66%{transform:translate(-20px,30px) scale(.95)}}
+
+/* INTRO */
+#intro{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0a3e 0%,#07020f 70%)}
+.intro-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);backdrop-filter:var(--blur);border-radius:24px;padding:48px 56px;max-width:520px;width:90%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
+.intro-logo{width:160px;filter:brightness(1.1)}
+.intro-tagline{font-size:15px;color:var(--text2);min-height:24px;letter-spacing:.01em}
+.intro-counter{font-size:48px;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.intro-bar-wrap{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
+.intro-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:99px;transition:width .05s linear}
+.intro-input-wrap{width:100%;display:none;flex-direction:column;gap:12px}
+.intro-input-wrap input{width:100%;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:10px;padding:12px 16px;color:var(--text);font-family:inherit;font-size:15px;outline:none;transition:.2s}
+.intro-input-wrap input:focus{border-color:var(--accent2)}
+.intro-input-wrap input::placeholder{color:var(--text2)}
+.intro-btns{display:flex;gap:10px;width:100%}
+.intro-btns button{flex:1;padding:12px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.btn-continue{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff}
+.btn-continue:hover{opacity:.85}
+.btn-skip{background:transparent;border:1px solid var(--glass-border);color:var(--text2)}
+.btn-skip:hover{border-color:var(--accent2);color:var(--text)}
+
+/* IRIS */
+#iris{position:fixed;inset:0;z-index:999;pointer-events:none;background:#07020f;clip-path:circle(150% at 50% 50%);transition:clip-path 0.9s cubic-bezier(.77,0,.18,1)}
+#iris.closed{clip-path:circle(0% at 50% 50%)}
+
+/* APP */
+#app{position:relative;z-index:1;opacity:0;transition:opacity .6s ease}
+#app.visible{opacity:1}
+
+/* HEADER */
+.site-header{position:sticky;top:0;z-index:100;backdrop-filter:blur(24px);background:rgba(7,2,15,.8);border-bottom:1px solid var(--glass-border);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.header-logo{display:flex;align-items:center;gap:12px}
+.header-logo img{height:32px}
+.header-logo span{font-size:14px;font-weight:600;color:var(--text2)}
+.client-badge{background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);border-radius:99px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--accent3);display:none}
+.client-badge.visible{display:block}
+
+/* HERO */
+.hero{padding:72px 32px 40px;text-align:center;max-width:860px;margin:0 auto}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:16px}
+.hero h1 span{background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:16px;line-height:1.6}
+
+/* SELECTOR */
+.selector-section{max-width:1100px;margin:0 auto;padding:0 24px 40px}
+
+.chips-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:14px}
+
+.chips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:0}
+
+.chip{background:var(--glass-bg);border:1.5px solid var(--glass-border);border-radius:var(--radius);padding:14px 10px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;transition:all .18s ease;position:relative;user-select:none}
+.chip:hover{border-color:rgba(168,85,247,.4);transform:translateY(-2px);background:rgba(168,85,247,.06)}
+.chip svg{flex-shrink:0}
+.chip-name{font-size:11.5px;font-weight:700;text-align:center;color:var(--text2);line-height:1.2;transition:color .18s}
+.chip.active{background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.55)}
+.chip.active .chip-name{color:var(--text)}
+.chip-check{position:absolute;top:7px;right:7px;width:14px;height:14px;border-radius:50%;background:var(--accent2);display:none;align-items:center;justify-content:center;box-shadow:0 0 8px rgba(168,85,247,.6)}
+.chip-check svg{width:9px;height:9px}
+.chip.active .chip-check{display:flex}
+
+/* SUB-PANEL */
+.sub-panel{max-height:0;overflow:hidden;transition:max-height .4s ease;margin-top:0}
+.sub-panel.open{max-height:2000px;margin-top:16px}
+.sub-panel-inner{border:1.5px solid rgba(168,85,247,.2);border-radius:var(--radius);background:rgba(168,85,247,.04);padding:20px 22px;display:flex;flex-direction:column;gap:18px}
+.sub-panel-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(168,85,247,.7);margin-bottom:4px}
+.sub-group{display:flex;flex-direction:column;gap:8px}
+.sub-group-header{display:flex;align-items:center;gap:7px}
+.sub-group-header svg{flex-shrink:0}
+.sub-group-header span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)}
+.sub-divider{height:1px;background:rgba(255,255,255,.06);margin:2px 0}
+.pills-row{display:flex;flex-wrap:wrap;gap:7px}
+.pill{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:99px;padding:5px 13px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;user-select:none}
+.pill:hover{border-color:rgba(168,85,247,.4);color:var(--text)}
+.pill-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .15s;flex-shrink:0}
+.pill.active{color:var(--text)}
+.pill[data-plat^="g-"].active{border-color:#4285F4;background:rgba(66,133,244,.1)}
+.pill[data-plat^="g-"].active .pill-dot{background:#4285F4;box-shadow:0 0 6px #4285F4}
+.pill[data-plat^="yt-"].active{border-color:#FF0000;background:rgba(255,0,0,.1)}
+.pill[data-plat^="yt-"].active .pill-dot{background:#FF0000;box-shadow:0 0 6px #FF0000}
+.pill[data-plat^="m-"].active{border-color:#1877F2;background:rgba(24,119,242,.1)}
+.pill[data-plat^="m-"].active .pill-dot{background:#1877F2;box-shadow:0 0 6px #1877F2}
+.pill[data-plat^="li-"].active{border-color:#0A66C2;background:rgba(10,102,194,.1)}
+.pill[data-plat^="li-"].active .pill-dot{background:#0A66C2;box-shadow:0 0 6px #0A66C2}
+.pill[data-plat^="sp-"].active{border-color:#1DB954;background:rgba(29,185,84,.1)}
+.pill[data-plat^="sp-"].active .pill-dot{background:#1DB954;box-shadow:0 0 6px #1DB954}
+.pill[data-plat^="p-"].active{border-color:var(--accent2);background:rgba(168,85,247,.1)}
+.pill[data-plat^="p-"].active .pill-dot{background:var(--accent2);box-shadow:0 0 6px var(--accent2)}
+.pill[data-plat="tiktok"].active,.pill[data-plat="x"].active,.pill[data-plat="kwai"].active,.pill[data-plat="push"].active{border-color:var(--accent2);background:rgba(168,85,247,.1)}
+.pill[data-plat="tiktok"].active .pill-dot,.pill[data-plat="x"].active .pill-dot,.pill[data-plat="kwai"].active .pill-dot,.pill[data-plat="push"].active .pill-dot{background:var(--accent2);box-shadow:0 0 6px var(--accent2)}
+
+/* ACTIONS */
+.actions-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px;padding:18px 22px;background:var(--glass-bg);border:1.5px solid var(--glass-border);border-radius:var(--radius)}
+.count-label{font-size:13px;color:var(--text2);margin-right:auto}
+.count-label strong{color:var(--text);font-weight:700}
+.btn{padding:10px 20px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.btn-primary,.btn-secondary,.btn-ghost{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff}
+.btn-primary:hover,.btn-secondary:hover,.btn-ghost:hover{opacity:.85;transform:translateY(-1px)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:80px 32px;color:var(--text2);display:none}
+.empty-state.visible{display:block}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:.4}
+.empty-state p{font-size:15px}
+
+/* OUTPUT */
+.output-section{max-width:1100px;margin:0 auto;padding:0 24px 80px}
+
+.pblock{margin-bottom:32px;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pblock-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--glass-border)}
+.pblock-header svg{flex-shrink:0}
+.pblock-title{font-size:17px;font-weight:700}
+.pblock-subtitle{font-size:12px;color:var(--text2);margin-left:auto;background:rgba(255,255,255,.05);border-radius:99px;padding:3px 10px}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.spec-card{background:var(--glass-bg);border:1.5px solid var(--glass-border);border-radius:var(--radius);padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.card-title{font-size:13px;font-weight:700;color:var(--text)}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.04em}
+.badge-video{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.badge-img{background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)}
+.badge-audio{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+.badge-text{background:rgba(234,179,8,.15);color:#fde047;border:1px solid rgba(234,179,8,.3)}
+
+/* PROPORTION BOXES */
+.prop-boxes{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.prop-box{border:1.5px solid rgba(168,85,247,.45);border-radius:3px;background:rgba(168,85,247,.07)}
+.r169{width:29px;height:16px}
+.r916{width:16px;height:28px}
+.r11{width:22px;height:22px}
+.r45{width:20px;height:25px}
+.r191{width:30px;height:16px}
+.prop-label{font-size:9.5px;color:var(--text2);font-weight:500}
+
+/* SPEC GROUPS */
+.spec-group{display:flex;flex-direction:column;gap:5px}
+.spec-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(168,85,247,.6);margin-bottom:2px}
+.spec-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.spec-row:last-child{border-bottom:none}
+.spec-key{color:var(--text2);flex-shrink:0;max-width:45%}
+.spec-val{color:var(--text);text-align:right;font-weight:500;word-break:break-word}
+.spec-note{font-size:11px;color:rgba(168,85,247,.7);background:rgba(168,85,247,.07);border-radius:6px;padding:6px 9px;line-height:1.5}
+
+/* FOOTER */
+footer{text-align:center;padding:32px;color:var(--text2);font-size:12px;border-top:1px solid var(--glass-border)}
+
+/* PRINT HEADER */
+.print-header{display:none}
+
+/* PRINT */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  body{background:#fff!important;color:#111!important}
+  .blob,.blob1,.blob2,.blob3,#intro,#iris,.site-header,.hero,.selector-section,.actions-bar,footer,.empty-state{display:none!important}
+  #app{opacity:1!important;transform:none!important}
+
+  /* print header */
+  .print-header{display:flex!important;align-items:center;gap:16px;padding:16px 0 14px;border-bottom:3px solid #7c3aed;margin-bottom:28px}
+  .print-header img{height:28px;filter:brightness(0)!important}
+  .print-header h2{font-size:15px;font-weight:700;color:#111!important}
+  .print-header .ph-client{font-size:12px;color:#7c3aed!important;font-weight:600;margin-left:auto}
+  .print-header .ph-date{font-size:11px;color:#888!important}
+
+  /* layout */
+  .output-section{padding:0 16px!important}
+  .pblock{break-inside:avoid;margin-bottom:28px;page-break-inside:avoid}
+  .pblock-header{background:#f4eeff!important;border:1px solid #d8b4fe!important;border-radius:10px!important;padding:10px 14px!important;margin-bottom:14px}
+  .pblock-title{color:#4c1d95!important;font-size:15px!important}
+  .pblock-subtitle{background:#ede9fe!important;color:#6d28d9!important;border-radius:99px!important}
+  .cards-grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
+
+  /* cards */
+  .spec-card{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:8px!important;break-inside:avoid;page-break-inside:avoid}
+  .card-title{color:#111!important;font-size:12px!important}
+
+  /* text inside cards */
+  .spec-key{color:#555!important}
+  .spec-val{color:#111!important;font-weight:600!important}
+  .spec-row{border-bottom:1px solid #f0f0f0!important}
+  .spec-group-title{color:#7c3aed!important;opacity:1!important}
+  .spec-note{background:#f5f3ff!important;color:#6d28d9!important;border:1px solid #ddd6fe!important}
+
+  /* proportion boxes */
+  .prop-box{border:1.5px solid #7c3aed!important;background:#f5f3ff!important}
+  .prop-label{color:#555!important}
+
+  /* badges */
+  .badge-video{background:#fef2f2!important;color:#dc2626!important;border-color:#fca5a5!important}
+  .badge-img{background:#eff6ff!important;color:#2563eb!important;border-color:#93c5fd!important}
+  .badge-audio{background:#f0fdf4!important;color:#16a34a!important;border-color:#86efac!important}
+  .badge-text{background:#fefce8!important;color:#ca8a04!important;border-color:#fde047!important}
+}
+</style>
+</head>
+<body>
+
+<!-- BLOBS -->
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+
+<!-- IRIS -->
+<div id="iris"></div>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-card">
+    <img src="https://esquina.online/assets/logo.webp" class="intro-logo" alt="Esquina Digital">
+    <div class="intro-counter" id="introCounter">0%</div>
+    <div class="intro-bar-wrap"><div class="intro-bar" id="introBar"></div></div>
+    <div class="intro-tagline" id="introTagline"></div>
+    <div class="intro-input-wrap" id="introInputWrap">
+      <input type="text" id="clientInput" placeholder="Nome do cliente (ex: Villa Global Education)" autocomplete="off">
+      <div class="intro-btns">
+        <button class="btn-continue" onclick="confirmClient()">Continuar →</button>
+        <button class="btn-skip" onclick="skipIntro()">Pular</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- PRINT HEADER -->
+  <div class="print-header">
+    <img src="https://esquina.online/assets/logo.webp" alt="Esquina Digital">
+    <h2>Mídia Kit — Especificações de Formatos</h2>
+    <span class="ph-client" id="phClient"></span>
+    <span class="ph-date" id="phDate"></span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-logo">
+      <img src="https://esquina.online/assets/logo.webp" alt="Esquina Digital">
+      <span>Mídia Kit</span>
+    </div>
+    <div class="client-badge" id="clientBadge"></div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Especificações de <span>Formatos Digitais</span></h1>
+    <p>Selecione as plataformas e formatos desejados para gerar o checklist de especificações técnicas.</p>
+  </section>
+
+  <!-- SELECTOR -->
+  <section class="selector-section">
+    <div class="chips-label">Plataformas</div>
+    <div class="chips-grid" id="chipsGrid"></div>
+    <div class="sub-panel" id="subPanel">
+      <div class="sub-panel-inner">
+        <div class="sub-panel-title">Refinamento de formatos</div>
+        <div id="subGroups"></div>
+      </div>
+    </div>
+    <div class="actions-bar">
+      <span class="count-label"><strong id="countNum">0</strong> formatos selecionados</span>
+      <button class="btn btn-primary" onclick="exportPackage()">Exportar PDF + Planilha</button>
+      <button class="btn btn-secondary" onclick="exportXLSX()">Exportar Planilha</button>
+      <button class="btn btn-secondary" onclick="window.print()">Exportar PDF</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Limpar</button>
+    </div>
+  </section>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">🗂️</div>
+    <p>Selecione ao menos um formato para ver as especificações.</p>
+  </div>
+
+  <!-- OUTPUT -->
+  <section class="output-section" id="outputSection"></section>
+
+  <footer>Esquina Digital · Mídia Kit · Especificações técnicas atualizadas</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ============================================================
+// PLATFORM DEFINITIONS
+// ============================================================
+const PLATFORMS = [
+  {id:'google', name:'Google Ads', hasSubs:true, subs:[
+    {val:'g-search',label:'Search'},
+    {val:'g-display-grafico',label:'Display Gráfico'},
+    {val:'g-display-responsivo',label:'Display Responsivo'},
+    {val:'g-demand-gen',label:'Demand Gen'},
+    {val:'g-pmax',label:'PMAX'},
+  ], svg:`<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>`},
+  {id:'youtube', name:'YouTube', hasSubs:true, subs:[
+    {val:'yt-instream-pul',label:'In-Stream Pulável'},
+    {val:'yt-instream-nao',label:'In-Stream Não Pulável'},
+    {val:'yt-bumper',label:'Bumper Ads'},
+    {val:'yt-shorts',label:'Shorts'},
+  ], svg:`<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.5 6.19a3.02 3.02 0 00-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 00.5 6.19 31.5 31.5 0 000 12a31.5 31.5 0 00.5 5.81 3.02 3.02 0 002.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 002.12-2.14A31.5 31.5 0 0024 12a31.5 31.5 0 00-.5-5.81z" fill="#FF0000"/><path d="M9.75 15.02V8.98L15.5 12l-5.75 3.02z" fill="#fff"/></svg>`},
+  {id:'meta', name:'Meta Ads', hasSubs:true, subs:[
+    {val:'m-card',label:'Card (Imagem)'},
+    {val:'m-carrossel',label:'Carrossel'},
+    {val:'m-video',label:'Vídeo'},
+  ], svg:`<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2"/></svg>`},
+  {id:'linkedin', name:'LinkedIn', hasSubs:true, subs:[
+    {val:'li-card',label:'Card Imagem'},
+    {val:'li-video',label:'Vídeo'},
+    {val:'li-carrossel',label:'Carrossel'},
+  ], svg:`<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="#0A66C2"/></svg>`},
+  {id:'spotify', name:'Spotify', hasSubs:true, subs:[
+    {val:'sp-audio',label:'Audio Ads'},
+    {val:'sp-video',label:'Video Ads'},
+  ], svg:`<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" fill="#1DB954"/></svg>`},
+  {id:'programatica', name:'Programática', hasSubs:true, subs:[
+    {val:'p-globoplay',label:'GloboPlay'},
+    {val:'p-netflix',label:'Netflix'},
+    {val:'p-disney',label:'Disney+'},
+    {val:'p-ctv',label:'TV Conectada'},
+    {val:'p-banner',label:'Banner'},
+    {val:'p-video',label:'Vídeo'},
+    {val:'p-audio',label:'Áudio'},
+    {val:'p-native',label:'Native Ads'},
+  ], svg:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="#a78bfa" stroke-width="1.8"/><path d="M14 4h7M14 8h5M3 15h18M3 19h14" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round"/></svg>`},
+  {id:'tiktok', name:'TikTok', hasSubs:false, subs:[{val:'tiktok',label:'TikTok In-Feed'}], svg:`<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.53V6.77a4.85 4.85 0 01-1.01-.08z" fill="#FE2C55"/></svg>`},
+  {id:'x', name:'X (Twitter)', hasSubs:false, subs:[{val:'x',label:'X Ads'}], svg:`<svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.713 5.725zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#fff"/></svg>`},
+  {id:'kwai', name:'Kwai', hasSubs:false, subs:[{val:'kwai',label:'Kwai Ads'}], svg:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#FF5100"/><path d="M8 7h3v4.5l4-4.5h3.5l-4.5 5 4.5 5H15l-4-4.5V17H8V7z" fill="#fff"/></svg>`},
+  {id:'push', name:'Push Notification', hasSubs:false, subs:[{val:'push',label:'Push'}], svg:`<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`},
+];
+
+// ============================================================
+// SPECS DATA
+// ============================================================
+const SPECS = {
+'g-search':{
+  title:'Google Search',platId:'google',subtitle:'Search',
+  cards:[{
+    title:'Anúncio de Texto Expandido',badges:['text'],props:[],
+    groups:[
+      {title:'Títulos',rows:[['Quantidade','Até 15 títulos'],['Caracteres por título','30 caracteres'],['Mínimo recomendado','3 títulos']]},
+      {title:'Descrições',rows:[['Quantidade','Até 4 descrições'],['Caracteres por descrição','90 caracteres']]},
+      {title:'Extensões de Imagem',rows:[['Paisagem','1200×628px · 5.120KB'],['Quadrada','1200×1200px · 5.120KB']]},
+    ],
+    note:'Títulos e descrições são combinados automaticamente. Quanto mais variações, melhor o desempenho.'
+  }]
+},
+'g-display-grafico':{
+  title:'Display Gráfico',platId:'google',subtitle:'Display Gráfico',
+  cards:[{
+    title:'Banners Estáticos / Animados',badges:['img'],props:[],
+    groups:[
+      {title:'Tamanhos aceitos',rows:[['Retângulo médio','300×250px'],['Leaderboard','728×90px'],['Skyscraper largo','160×600px'],['Banner mobile','320×100px'],['Billboard','970×250px']]},
+      {title:'Arquivos',rows:[['Formatos','GIF · JPG · PNG'],['Tamanho máximo','150KB']]},
+      {title:'Textos (anúncio responsivo)',rows:[['Títulos curtos','Até 15 · 30 caracteres'],['Descrições','Até 4 · 90 caracteres']]},
+    ],
+  }]
+},
+'g-display-responsivo':{
+  title:'Display Responsivo',platId:'google',subtitle:'Display Responsivo',
+  cards:[{
+    title:'Imagens e Logotipos',badges:['img'],props:[{label:'1,91:1',cls:'r191'},{label:'1:1',cls:'r11'}],
+    groups:[
+      {title:'Imagens de marketing',rows:[['Paisagem (obrigatória)','1200×628px · 5.120KB'],['Quadrada (obrigatória)','1200×1200px · 5.120KB'],['Quantidade','2 a 20 imagens']]},
+      {title:'Logotipos',rows:[['Retangular 4:1','1200×300px · 5.120KB'],['Quadrado 1:1','1200×1200px · 5.120KB']]},
+      {title:'Textos',rows:[['Títulos curtos','Até 5 · 30 caracteres'],['Título longo','1 · 90 caracteres'],['Descrições','Até 5 · 90 caracteres'],['Contagem','Sem contar o espaço']]},
+    ],
+    note:'Pelo menos 1 imagem paisagem e 1 quadrada são obrigatórias.'
+  }]
+},
+'g-demand-gen':{
+  title:'Demand Gen',platId:'google',subtitle:'Demand Gen',
+  cards:[{
+    title:'Imagens e Vídeo',badges:['img','video'],props:[{label:'1,91:1',cls:'r191'},{label:'1:1',cls:'r11'},{label:'4:5',cls:'r45'},{label:'9:16',cls:'r916'}],
+    groups:[
+      {title:'Imagens (1 de cada)',rows:[['Paisagem','1200×628px'],['Quadrada','1200×1200px'],['Retrato','960×1200px'],['Vertical','1080×1920px']]},
+      {title:'Textos',rows:[['Títulos','Até 5 · 40 caracteres'],['Descrições','Até 5 · 90 caracteres']]},
+      {title:'Vídeo (opcional)',rows:[['Formato','Link YouTube'],['Orientações','Vertical + Horizontal recomendado']]},
+    ],
+  }]
+},
+'g-pmax':{
+  title:'PMAX',platId:'google',subtitle:'Performance Max',
+  cards:[{
+    title:'Assets Completos',badges:['img','video','text'],props:[{label:'1,91:1',cls:'r191'},{label:'1:1',cls:'r11'},{label:'4:5',cls:'r45'},{label:'9:16',cls:'r916'}],
+    groups:[
+      {title:'Imagens (mesmas do Demand Gen)',rows:[['Paisagem','1200×628px'],['Quadrada','1200×1200px'],['Retrato','960×1200px'],['Vertical','1080×1920px']]},
+      {title:'Textos',rows:[['Títulos curtos','Até 15 · 30 caracteres'],['Títulos longos','Até 5 · 90 caracteres'],['Descrições','Até 5 · 90 caracteres']]},
+      {title:'Vídeo (obrigatório)',rows:[['Formato','Link YouTube'],['Orientações','Vertical + Horizontal obrigatório']]},
+    ],
+    note:'Vídeo é obrigatório no PMAX. Sem vídeo próprio, o Google gera automaticamente — qualidade inferior.'
+  }]
+},
+'yt-instream-pul':{
+  title:'In-Stream Pulável',platId:'youtube',subtitle:'In-Stream Pulável',
+  cards:[{
+    title:'Vídeo Pulável após 5s',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Duração',rows:[['Recomendado','15s a 30s'],['Máximo','Sem limite'],['Pulável após','5 segundos']]},
+      {title:'Arquivo',rows:[['Formatos','MP4 · MOV · AVI · MPEG'],['Tamanho máximo','1GB'],['Resolução mínima','640×360px']]},
+      {title:'Cobrança',rows:[['Modelo','CPV'],['Cobrança quando','≥30s assistidos ou interação']]},
+    ],
+  }]
+},
+'yt-instream-nao':{
+  title:'In-Stream Não Pulável',platId:'youtube',subtitle:'In-Stream Não Pulável',
+  cards:[
+    {
+      title:'Não Pulável Padrão',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+      groups:[
+        {title:'Duração',rows:[['Intervalo','7 a 15 segundos'],['Não pulável','Sim — todos os dispositivos']]},
+        {title:'Arquivo',rows:[['Formatos','MP4 · MOV · AVI · MPEG'],['Tamanho máximo','1GB'],['Resolução mínima','640×360px']]},
+        {title:'Cobrança',rows:[['Modelo','CPM']]},
+      ],
+    },
+    {
+      title:'Não Pulável de 30 Segundos',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+      groups:[
+        {title:'Duração',rows:[['Intervalo','16 a 30 segundos'],['Não pulável','Sim — apenas Smart TVs']]},
+        {title:'Arquivo',rows:[['Formatos','MP4 · MOV · AVI · MPEG'],['Tamanho máximo','1GB'],['Resolução mínima','640×360px']]},
+        {title:'Cobrança',rows:[['Modelo','CPM']]},
+      ],
+      note:'Exibido exclusivamente em Smart TVs (YouTube na televisão).'
+    },
+  ]
+},
+'yt-bumper':{
+  title:'Bumper Ads',platId:'youtube',subtitle:'Bumper Ads',
+  cards:[{
+    title:'Vídeo Curto',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Duração',rows:[['Máximo','6 segundos'],['Não pulável','Sim']]},
+      {title:'Arquivo',rows:[['Formatos','MP4 · MOV'],['Tamanho máximo','1GB']]},
+      {title:'Cobrança',rows:[['Modelo','CPM']]},
+    ],
+    note:'Ideal para reforço de marca após campanhas de awareness. Mensagem única e direta.'
+  }]
+},
+'yt-shorts':{
+  title:'YouTube Shorts',platId:'youtube',subtitle:'Shorts Ads',
+  cards:[{
+    title:'Vídeo Vertical',badges:['video'],props:[{label:'9:16',cls:'r916'}],
+    groups:[
+      {title:'Especificações',rows:[['Resolução','1080×1920px'],['Formatos','MP4 · MOV'],['Tamanho máximo','1GB'],['Duração','Até 60s (ideal 15–30s)']]},
+      {title:'Áreas seguras',rows:[['Topo e rodapé','Evitar elementos importantes'],['Obs','Interface do Shorts sobrepõe bordas']]},
+    ],
+  }]
+},
+'m-card':{
+  title:'Meta — Card (Imagem)',platId:'meta',subtitle:'Card · Imagem Única',
+  cards:[
+    {
+      title:'Feed (Facebook e Instagram)',badges:['img'],props:[{label:'1:1',cls:'r11'},{label:'4:5',cls:'r45'}],
+      groups:[
+        {title:'Arquivo',rows:[['Formatos','JPG · PNG'],['Proporções','1:1 · 4:5'],['Resolução mínima','1080×1080px'],['Tamanho máximo','30MB']]},
+        {title:'Texto',rows:[['Texto principal','125 caracteres'],['Título','40 caracteres'],['Hashtags','Até 30']]},
+      ],
+    },
+    {
+      title:'Stories e Reels',badges:['img'],props:[{label:'9:16',cls:'r916'}],
+      groups:[
+        {title:'Arquivo',rows:[['Formatos','JPG · PNG'],['Proporção','9:16'],['Resolução','1080×1920px'],['Tamanho máximo','30MB']]},
+        {title:'Áreas seguras',rows:[['Topo','250px (UI do app)'],['Rodapé','340px (UI do app)']]},
+        {title:'Texto',rows:[['Texto principal','125 caracteres']]},
+      ],
+    },
+  ]
+},
+'m-carrossel':{
+  title:'Meta — Carrossel',platId:'meta',subtitle:'Carrossel',
+  cards:[{
+    title:'Cards do Carrossel',badges:['img','video'],props:[{label:'1:1',cls:'r11'},{label:'4:5',cls:'r45'}],
+    groups:[
+      {title:'Arquivo',rows:[['Formatos','JPG · PNG · MP4 · MOV · GIF'],['Proporções','1:1 · 4:5'],['Cards','2 a 10 cards'],['Imagem (máx)','30MB'],['Vídeo (máx)','4GB · 1s a 2min']]},
+      {title:'Texto',rows:[['Texto principal','125 caracteres'],['URL de destino','Obrigatória']]},
+    ],
+    note:'Cada card pode ter título e URL próprios. Recomendado manter a mesma proporção em todos os cards.'
+  }]
+},
+'m-video':{
+  title:'Meta — Vídeo',platId:'meta',subtitle:'Vídeo',
+  cards:[
+    {
+      title:'Feed',badges:['video'],props:[{label:'4:5',cls:'r45'}],
+      groups:[
+        {title:'Arquivo',rows:[['Formatos','MP4 · MOV · GIF'],['Proporção recomendada','4:5'],['Resolução','1080×1350px'],['Tamanho máximo','4GB'],['Duração','1s a 60min']]},
+        {title:'Texto',rows:[['Texto principal','125 caracteres']]},
+      ],
+    },
+    {
+      title:'Stories',badges:['video'],props:[{label:'9:16',cls:'r916'}],
+      groups:[
+        {title:'Arquivo',rows:[['Formatos','MP4 · MOV · GIF'],['Proporção','9:16'],['Resolução','1080×1920px'],['Tamanho máximo','4GB']]},
+        {title:'Áreas seguras',rows:[['Topo','250px'],['Rodapé','340px']]},
+      ],
+    },
+    {
+      title:'Reels',badges:['video'],props:[{label:'9:16',cls:'r916'}],
+      groups:[
+        {title:'Arquivo',rows:[['Formatos','MP4 · MOV'],['Proporção','9:16'],['Resolução','1080×1920px'],['Tamanho máximo','4GB'],['Duração','Até 15min']]},
+        {title:'Áreas seguras',rows:[['Topo','14% da altura'],['Rodapé','35% da altura'],['Laterais','6% de cada lado']]},
+        {title:'Texto',rows:[['Texto principal','72 caracteres']]},
+      ],
+    },
+  ]
+},
+'li-card':{
+  title:'LinkedIn — Card Imagem',platId:'linkedin',subtitle:'Single Image Ad',
+  cards:[{
+    title:'Imagem Única',badges:['img'],props:[{label:'1,91:1',cls:'r191'},{label:'1:1',cls:'r11'},{label:'Vertical',cls:'r45'}],
+    groups:[
+      {title:'Arquivo',rows:[['Formatos','JPG · PNG · GIF (estático)'],['Tamanho máximo','5MB'],['Largura mínima','400px'],['Recomendado','1080×1080px']]},
+      {title:'Texto',rows:[['Introdução','150 caracteres'],['Título','70 caracteres']]},
+    ],
+  }]
+},
+'li-video':{
+  title:'LinkedIn — Vídeo',platId:'linkedin',subtitle:'Video Ad',
+  cards:[{
+    title:'Vídeo Patrocinado',badges:['video'],props:[{label:'4:5',cls:'r45'},{label:'9:16',cls:'r916'},{label:'1:1',cls:'r11'},{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Arquivo',rows:[['Formato','MP4'],['Tamanho','75KB a 500MB'],['Duração','3s a 30min'],['Proporções','4:5 · 9:16 · 1:1 · 16:9'],['Resolução','360×360 a 1920×1920px']]},
+      {title:'Thumbnail',rows:[['Formatos','JPG · PNG'],['Tamanho máximo','2MB'],['Proporção','Mesma do vídeo']]},
+      {title:'Texto',rows:[['Introdução','150 caracteres'],['Título','70 caracteres']]},
+    ],
+  }]
+},
+'li-carrossel':{
+  title:'LinkedIn — Carrossel',platId:'linkedin',subtitle:'Carousel Ad',
+  cards:[{
+    title:'Cards do Carrossel',badges:['img'],props:[{label:'1:1',cls:'r11'}],
+    groups:[
+      {title:'Arquivo',rows:[['Formatos','JPG · PNG · GIF (estático, sem animação)'],['Tamanho por card','Máximo 10MB'],['Resolução recomendada','1080×1080px'],['Quantidade','2 a 10 cards']]},
+      {title:'Texto',rows:[['Introdução','150 caracteres'],['Título por card','45 caracteres']]},
+    ],
+    note:'Vídeos não são aceitos em carrosseis do LinkedIn.'
+  }]
+},
+'sp-audio':{
+  title:'Spotify — Audio Ads',platId:'spotify',subtitle:'Audio Ads',
+  cards:[{
+    title:'Áudio + Companion Banner',badges:['audio','img'],props:[{label:'1:1',cls:'r11'}],
+    groups:[
+      {title:'Áudio',rows:[['Duração máxima','30 segundos'],['Formatos','MP3 · WAV (Programático: OGG obrigatório)'],['Tamanho (Direct IO)','Até 500MB'],['Tamanho (Programático)','Máximo 1MB']]},
+      {title:'Companion Banner',rows:[['Formato (Direct IO)','640×640px JPEG/PNG'],['Formato (Programático)','300×250px JPEG']]},
+    ],
+  }]
+},
+'sp-video':{
+  title:'Spotify — Video Ads',platId:'spotify',subtitle:'Video Ads',
+  cards:[{
+    title:'Vídeo',badges:['video'],props:[{label:'9:16',cls:'r916'},{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Arquivo',rows:[['Duração máxima','30 segundos'],['Formatos','MOV · MP4'],['Tamanho máximo','500MB'],['Retrato','9:16 · 720×1280px'],['Paisagem','16:9 · 1280×720px']]},
+      {title:'Texto',rows:[['Nome do anunciante','25 caracteres']]},
+    ],
+    note:'Desktop aceita apenas formato paisagem (16:9).'
+  }]
+},
+'tiktok':{
+  title:'TikTok — In-Feed',platId:'tiktok',subtitle:'In-Feed Ads',
+  cards:[{
+    title:'Vídeo In-Feed',badges:['video'],props:[{label:'9:16',cls:'r916'},{label:'1:1',cls:'r11'},{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Arquivo',rows:[['Formatos','MP4 · MOV · MPEG · 3GP · AVI'],['Duração','5s a 60s (ideal 21–34s)'],['Tamanho máximo','500MB'],['Resolução 9:16','540×960px mínimo'],['Resolução 1:1','640×640px mínimo'],['Resolução 16:9','960×540px mínimo'],['Bitrate mínimo','516 kbps']]},
+      {title:'Perfil',rows:[['Foto de perfil','98×98px JPG/PNG · 50KB máx']]},
+    ],
+    note:'Mantenha elementos-chave no centro do frame. Evite texto e logos próximos às bordas.'
+  }]
+},
+'x':{
+  title:'X (Twitter)',platId:'x',subtitle:'X Ads',
+  cards:[
+    {title:'Texto',badges:['text'],props:[],groups:[{title:'Limite',rows:[['Texto','280 caracteres'],['Com link','-23 caracteres (URL encurtada)']]}]},
+    {title:'Imagem',badges:['img'],props:[{label:'1,91:1',cls:'r191'},{label:'1:1',cls:'r11'}],groups:[{title:'Arquivo',rows:[['Formatos','PNG · JPEG'],['Tamanho máximo','5MB'],['Paisagem','800×418px'],['Quadrada','800×800px']]}]},
+    {title:'Vídeo Horizontal',badges:['video'],props:[{label:'16:9',cls:'r169'}],groups:[{title:'Arquivo',rows:[['Formatos','MP4 · MOV'],['Tamanho máximo','1GB'],['Duração ideal','≤15 segundos']]}]},
+    {title:'Vídeo Vertical',badges:['video'],props:[{label:'9:16',cls:'r916'}],groups:[{title:'Arquivo',rows:[['Proporção','9:16'],['Resolução mínima','720×1280px'],['Resolução máxima','1080×1920px']]}]},
+    {title:'Carrossel',badges:['img','video'],props:[],groups:[{title:'Especificações',rows:[['Cards','2 a 6 slides'],['Proporção','Mesma em todos os cards']]}]},
+    {title:'Collection',badges:['img'],props:[{label:'1:1',cls:'r11'}],groups:[{title:'Especificações',rows:[['Imagens','1 principal + 5 secundárias'],['Resolução','800×800px · 3MB'],['Links','Até 6'],['Texto','280 caracteres']]}]},
+  ]
+},
+'kwai':{
+  title:'Kwai',platId:'kwai',subtitle:'Kwai Ads',
+  cards:[
+    {title:'Vídeo In-Feed',badges:['video'],props:[{label:'9:16',cls:'r916'}],groups:[{title:'Arquivo',rows:[['Formatos','MP4 · MOV'],['Tamanho máximo','4GB'],['Duração','Até 30 segundos'],['Proporção','9:16']]}]},
+    {title:'Imagem',badges:['img'],props:[{label:'9:16',cls:'r916'}],groups:[{title:'Arquivo',rows:[['Formatos','PNG · JPG'],['Resolução','1080×1920px'],['Tamanho máximo','300KB']]}]},
+    {title:'Playable Ads',badges:['text'],props:[],groups:[{title:'Arquivo',rows:[['Formato','ZIP'],['Tamanho máximo','5MB'],['Nome do arquivo','Apenas alfanumérico']]}]},
+  ]
+},
+'push':{
+  title:'Push Notification',platId:'push',subtitle:'Push Ads',
+  cards:[{
+    title:'Banner + Notificação',badges:['img','text'],props:[],
+    groups:[
+      {title:'Imagens',rows:[['Banner Desktop','700×192px'],['Banner Mobile','320×100px'],['Logo','56×56px']]},
+      {title:'Texto',rows:[['Título','25 caracteres'],['Descrição','40 caracteres']]},
+      {title:'Operacional',rows:[['Criativas máx.','2 por campanha'],['Antecedência','Enviar com 48h de antecedência']]},
+    ],
+  }]
+},
+'p-globoplay':{
+  title:'GloboPlay',platId:'programatica',subtitle:'Programática · GloboPlay',
+  cards:[{
+    title:'Vídeo',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Duração',rows:[['Bumper','≤6 segundos'],['Short','≤15 segundos'],['Long','≤180 segundos']]},
+      {title:'Vídeo',rows:[['Proporção','16:9'],['Resolução','1920×1080px (Full HD)'],['Formatos','MP4 · MOV'],['Frame rate','29,97fps']]},
+      {title:'Áudio',rows:[['Codec','AAC · Estéreo · 1º canal'],['Bitrate','128 kbps']]},
+    ],
+  }]
+},
+'p-netflix':{
+  title:'Netflix',platId:'programatica',subtitle:'Programática · Netflix',
+  cards:[{
+    title:'Vídeo',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Duração',rows:[['Opções','15" · 30" · 60"']]},
+      {title:'Vídeo',rows:[['Proporção','16:9'],['Resolução','1920×1080px'],['Formatos','MP4 · MOV'],['Frame rate','29,97fps']]},
+      {title:'Áudio',rows:[['Codec','AAC · Estéreo'],['Bitrate','128 kbps']]},
+    ],
+  }]
+},
+'p-disney':{
+  title:'Disney+',platId:'programatica',subtitle:'Programática · Disney+',
+  cards:[{
+    title:'Vídeo',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+    groups:[
+      {title:'Duração',rows:[['Opções','5s a 90s em múltiplos de 5s']]},
+      {title:'Vídeo',rows:[['Proporção','16:9'],['Resolução','1920×1080px'],['Tamanho máximo','250MB'],['Formatos','MP4 · MOV'],['Frame rate nativo','23,98 · 24 · 25 · 29,97 · 30fps']]},
+      {title:'Áudio',rows:[['Frequência','48kHz'],['Codec','AAC-LC preferencial'],['Bitrate mínimo','≥192 kbps']]},
+      {title:'Restrições',rows:[['Bordas pretas','Não permitidas'],['Slates/countdowns','Não permitidos']]},
+    ],
+  }]
+},
+'p-ctv':{
+  title:'TV Conectada',platId:'programatica',subtitle:'Programática · CTV',
+  cards:[
+    {
+      title:'Netflix CTV',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+      groups:[
+        {title:'Duração',rows:[['Opções','10" · 15" · 20" · 30" · 60"']]},
+        {title:'Vídeo',rows:[['Resolução','1280×720 ou 1920×1080px'],['Formatos','MP4 · MOV'],['Codec','ProRes preferencial · H.264 aceito']]},
+        {title:'Áudio',rows:[['Codec','PCM preferencial · AAC-LC aceito'],['Bitrate mínimo','≥192 kbps']]},
+        {title:'Aprovação',rows:[['Prazo','7 dias úteis']]},
+      ],
+    },
+    {
+      title:'GloboPlay CTV',badges:['video'],props:[{label:'16:9',cls:'r169'}],
+      groups:[
+        {title:'Duração',rows:[['Opções','15" · 30" · 180"']]},
+        {title:'Vídeo',rows:[['Resolução','1920×1080px'],['Codec','H.264 preferencial'],['Frame rate','29,97fps']]},
+        {title:'Áudio',rows:[['Codec','AAC · Estéreo'],['Bitrate','128 kbps']]},
+      ],
+    },
+  ]
+},
+'p-banner':{
+  title:'Banner Programático',platId:'programatica',subtitle:'Programática · Display',
+  cards:[{
+    title:'Banners IAB',badges:['img'],props:[],
+    groups:[
+      {title:'Tamanhos IAB',rows:[['Retângulo médio','300×250px'],['Leaderboard','728×90px'],['Skyscraper','160×600px'],['Half Page','300×600px'],['Banner mobile','320×50px'],['Billboard','970×250px']]},
+      {title:'Estático',rows:[['Formatos','JPG · PNG · GIF'],['Tamanho máximo','150KB']]},
+      {title:'Animado (GIF)',rows:[['Tamanho máximo','200KB'],['Duração máxima','15 segundos'],['Loops máximos','3']]},
+      {title:'HTML5',rows:[['Tamanho máximo','200KB'],['Assets externos','Não permitidos'],['Animação','24fps · máx 15s']]},
+    ],
+  }]
+},
+'p-video':{
+  title:'Vídeo Programático (VAST)',platId:'programatica',subtitle:'Programática · VAST',
+  cards:[{
+    title:'Vídeo VAST',badges:['video'],props:[{label:'16:9',cls:'r169'},{label:'9:16',cls:'r916'}],
+    groups:[
+      {title:'Duração',rows:[['Não puláveis','6" · 15" · 30"'],['Puláveis','30"+']]},
+      {title:'Vídeo',rows:[['Codec','H.264 + AAC'],['Resoluções','1920×1080 · 1280×720px'],['Proporção','16:9 obrigatório · 9:16 opcional mobile'],['Bitrate mínimo','1500 kbps']]},
+      {title:'Áudio',rows:[['Codec','AAC · Estéreo'],['Bitrate','128 kbps']]},
+      {title:'Companion',rows:[['Banner','300×250px recomendado']]},
+    ],
+  }]
+},
+'p-audio':{
+  title:'Áudio Programático (DAAST)',platId:'programatica',subtitle:'Programática · DAAST',
+  cards:[{
+    title:'Áudio + Companion',badges:['audio','img'],props:[],
+    groups:[
+      {title:'Áudio',rows:[['Formatos','MP3 · OGG'],['Duração máxima','30 segundos'],['Bitrate mínimo','128 kbps'],['Sample rate','44,1kHz ou 48kHz']]},
+      {title:'Companion Banner',rows:[['Resolução','300×250px'],['Formatos','JPG · PNG'],['Tamanho máximo','150KB']]},
+    ],
+  }]
+},
+'p-native':{
+  title:'Native Ads',platId:'programatica',subtitle:'Programática · Native',
+  cards:[{
+    title:'Elementos do Anúncio Nativo',badges:['img','text'],props:[{label:'1:1',cls:'r11'},{label:'1,91:1',cls:'r191'}],
+    groups:[
+      {title:'Imagens',rows:[['Logo','300×300px JPG/PNG · 200KB'],['Imagem principal','1200×637px JPG/PNG · 1MB']]},
+      {title:'Textos',rows:[['Título','25 caracteres'],['Marca/Nome','25 caracteres'],['Texto','100 caracteres'],['CTA','25 caracteres']]},
+    ],
+  }]
+},
+};
+
+// ============================================================
+// XLSX DATA
+// ============================================================
+// Colunas do briefing: Plataforma | Formato | Criativo | Especificação | Valor | Observação Técnica | Nome do Arquivo | Responsável | Prazo de Entrega | Status | Aprovado
+function mkRow(pl,fmt,criativo,spec,valor,obs){
+  return {
+    'Plataforma':pl,'Formato':fmt,'Criativo':criativo,
+    'Especificação':spec,'Valor':valor,'Obs. Técnica':obs,
+    'Nome do Arquivo':'','Responsável':'','Prazo de Entrega':'','Status':'Pendente','Aprovado':'Não'
+  };
+}
+const xlsxData = {
+'g-search':[
+  mkRow('Google Ads','Search','Títulos','Quantidade','Até 15','30 caracteres cada'),
+  mkRow('Google Ads','Search','Descrições','Quantidade','Até 4','90 caracteres cada'),
+  mkRow('Google Ads','Search','Extensão Imagem Paisagem','Resolução','1200×628px','Máx 5.120KB'),
+  mkRow('Google Ads','Search','Quadrada','Imagem (extensão)','1200×1200px','Máx 5.120KB'),
+],
+'g-display-grafico':[
+  mkRow('Google Ads','Display Gráfico','300×250px','Banner','GIF/JPG/PNG','Máx 150KB'),
+  mkRow('Google Ads','Display Gráfico','728×90px','Banner','GIF/JPG/PNG','Máx 150KB'),
+  mkRow('Google Ads','Display Gráfico','160×600px','Banner','GIF/JPG/PNG','Máx 150KB'),
+  mkRow('Google Ads','Display Gráfico','320×100px','Banner','GIF/JPG/PNG','Máx 150KB'),
+  mkRow('Google Ads','Display Gráfico','970×250px','Banner','GIF/JPG/PNG','Máx 150KB'),
+  mkRow('Google Ads','Display Gráfico','Títulos','Texto','Até 15 · 30c',''),
+  mkRow('Google Ads','Display Gráfico','Descrições','Texto','Até 4 · 90c',''),
+],
+'g-display-responsivo':[
+  mkRow('Google Ads','Display Responsivo','Paisagem','Imagem','1200×628px','Máx 5.120KB, obrigatória'),
+  mkRow('Google Ads','Display Responsivo','Quadrada','Imagem','1200×1200px','Máx 5.120KB, obrigatória'),
+  mkRow('Google Ads','Display Responsivo','Retangular 4:1','Logo','1200×300px',''),
+  mkRow('Google Ads','Display Responsivo','Quadrado 1:1','Logo','1200×1200px',''),
+  mkRow('Google Ads','Display Responsivo','Títulos curtos','Texto','Até 5 · 30c',''),
+  mkRow('Google Ads','Display Responsivo','Título longo','Texto','1 · 90c',''),
+  mkRow('Google Ads','Display Responsivo','Descrições','Texto','Até 5 · 90c',''),
+],
+'g-demand-gen':[
+  mkRow('Google Ads','Demand Gen','Paisagem','Imagem','1200×628px',''),
+  mkRow('Google Ads','Demand Gen','Quadrada','Imagem','1200×1200px',''),
+  mkRow('Google Ads','Demand Gen','Retrato','Imagem','960×1200px',''),
+  mkRow('Google Ads','Demand Gen','Vertical','Imagem','1080×1920px',''),
+  mkRow('Google Ads','Demand Gen','Títulos','Texto','Até 5 · 40c',''),
+  mkRow('Google Ads','Demand Gen','Descrições','Texto','Até 5 · 90c',''),
+  mkRow('Google Ads','Demand Gen','Link YouTube','Vídeo','Opcional','Vertical + Horizontal'),
+],
+'g-pmax':[
+  mkRow('Google Ads','PMAX','Paisagem','Imagem','1200×628px',''),
+  mkRow('Google Ads','PMAX','Quadrada','Imagem','1200×1200px',''),
+  mkRow('Google Ads','PMAX','Retrato','Imagem','960×1200px',''),
+  mkRow('Google Ads','PMAX','Vertical','Imagem','1080×1920px',''),
+  mkRow('Google Ads','PMAX','Títulos curtos','Texto','Até 15 · 30c',''),
+  mkRow('Google Ads','PMAX','Títulos longos','Texto','Até 5 · 90c',''),
+  mkRow('Google Ads','PMAX','Descrições','Texto','Até 5 · 90c',''),
+  mkRow('Google Ads','PMAX','Link YouTube','Vídeo','OBRIGATÓRIO','Vertical + Horizontal'),
+],
+'yt-instream-pul':[
+  mkRow('YouTube','In-Stream Pulável','Duração recomendada','Vídeo','15–30s','Sem limite máximo'),
+  mkRow('YouTube','In-Stream Pulável','Formatos','Vídeo','MP4/MOV/AVI/MPEG','Máx 1GB'),
+  mkRow('YouTube','In-Stream Pulável','Resolução mínima','Vídeo','640×360px',''),
+  mkRow('YouTube','In-Stream Pulável','Modelo','Cobrança','CPV','≥30s ou interação'),
+],
+'yt-instream-nao':[
+  mkRow('YouTube','Não Pulável Padrão','Duração','Vídeo','7 a 15 segundos','Todos os dispositivos'),
+  mkRow('YouTube','Não Pulável Padrão','Formatos','Vídeo','MP4/MOV/AVI/MPEG','Máx 1GB · 640×360px mín'),
+  mkRow('YouTube','Não Pulável Padrão','Modelo','Cobrança','CPM',''),
+  mkRow('YouTube','Não Pulável 30s','Duração','Vídeo','16 a 30 segundos','Apenas Smart TVs'),
+  mkRow('YouTube','Não Pulável 30s','Formatos','Vídeo','MP4/MOV/AVI/MPEG','Máx 1GB · 640×360px mín'),
+  mkRow('YouTube','Não Pulável 30s','Modelo','Cobrança','CPM','Exclusivo YouTube na TV'),
+],
+'yt-bumper':[
+  mkRow('YouTube','Bumper Ads','Duração máxima','Vídeo','6 segundos','Não pulável'),
+  mkRow('YouTube','Bumper Ads','Formatos','Vídeo','MP4/MOV','Máx 1GB'),
+  mkRow('YouTube','Bumper Ads','Modelo','Cobrança','CPM',''),
+],
+'yt-shorts':[
+  mkRow('YouTube','Shorts Ads','Resolução','Vídeo','1080×1920px','9:16'),
+  mkRow('YouTube','Shorts Ads','Formatos','Vídeo','MP4/MOV','Máx 1GB'),
+  mkRow('YouTube','Shorts Ads','Duração','Vídeo','Até 60s','Ideal 15–30s'),
+],
+'m-card':[
+  mkRow('Meta Ads','Card (Imagem)','Proporções','Imagem','1:1 / 4:5','Feed'),
+  mkRow('Meta Ads','Card (Imagem)','Resolução mínima','Imagem','1080×1080px',''),
+  mkRow('Meta Ads','Card (Imagem)','Tamanho máximo','Imagem','30MB',''),
+  mkRow('Meta Ads','Card (Imagem)','Stories/Reels','Imagem','9:16 · 1080×1920px',''),
+  mkRow('Meta Ads','Card (Imagem)','Topo Stories','Área Segura','250px','UI do app'),
+  mkRow('Meta Ads','Card (Imagem)','Rodapé Stories','Área Segura','340px','UI do app'),
+  mkRow('Meta Ads','Card (Imagem)','Texto principal','Texto','125c',''),
+  mkRow('Meta Ads','Card (Imagem)','Título','Texto','40c',''),
+],
+'m-carrossel':[
+  mkRow('Meta Ads','Carrossel','Quantidade','Cards','2 a 10','Mesma proporção'),
+  mkRow('Meta Ads','Carrossel','Tamanho máximo','Imagem','30MB','JPG/PNG'),
+  mkRow('Meta Ads','Carrossel','Tamanho máximo','Vídeo','4GB','1s a 2min'),
+  mkRow('Meta Ads','Carrossel','Texto principal','Texto','125c',''),
+],
+'m-video':[
+  mkRow('Meta Ads','Vídeo','Feed','Vídeo','4:5 · 1080×1350px',''),
+  mkRow('Meta Ads','Vídeo','Stories','Vídeo','9:16 · 1080×1920px',''),
+  mkRow('Meta Ads','Vídeo','Reels','Vídeo','9:16 · 1080×1920px',''),
+  mkRow('Meta Ads','Vídeo','Tamanho máximo','Vídeo','4GB',''),
+  mkRow('Meta Ads','Vídeo','Reels topo','Área Segura','14%',''),
+  mkRow('Meta Ads','Vídeo','Reels rodapé','Área Segura','35%',''),
+  mkRow('Meta Ads','Vídeo','Feed texto','Texto','125c',''),
+  mkRow('Meta Ads','Vídeo','Reels texto','Texto','72c',''),
+],
+'li-card':[
+  mkRow('LinkedIn','Card Imagem','Formatos','Imagem','JPG/PNG/GIF estático',''),
+  mkRow('LinkedIn','Card Imagem','Tamanho máximo','Imagem','5MB',''),
+  mkRow('LinkedIn','Card Imagem','Recomendado','Imagem','1080×1080px',''),
+  mkRow('LinkedIn','Card Imagem','Introdução','Texto','150c',''),
+  mkRow('LinkedIn','Card Imagem','Título','Texto','70c',''),
+],
+'li-video':[
+  mkRow('LinkedIn','Vídeo','Formato','Vídeo','MP4','75KB a 500MB'),
+  mkRow('LinkedIn','Vídeo','Duração','Vídeo','3s a 30min',''),
+  mkRow('LinkedIn','Vídeo','Proporções','Vídeo','4:5 · 9:16 · 1:1 · 16:9',''),
+  mkRow('LinkedIn','Vídeo','Tamanho máximo','Thumbnail','2MB','JPG/PNG'),
+  mkRow('LinkedIn','Vídeo','Introdução','Texto','150c',''),
+  mkRow('LinkedIn','Vídeo','Título','Texto','70c',''),
+],
+'li-carrossel':[
+  mkRow('LinkedIn','Carrossel','Formatos','Imagem','JPG/PNG (sem GIF animado)',''),
+  mkRow('LinkedIn','Carrossel','Por card','Imagem','Máx 10MB',''),
+  mkRow('LinkedIn','Carrossel','Cards','Imagem','2 a 10','Sem vídeos'),
+  mkRow('LinkedIn','Carrossel','Introdução','Texto','150c',''),
+  mkRow('LinkedIn','Carrossel','Título por card','Texto','45c',''),
+],
+'sp-audio':[
+  mkRow('Spotify','Audio Ads','Duração máxima','Áudio','30 segundos',''),
+  mkRow('Spotify','Audio Ads','Formatos','Áudio','MP3/WAV','Programático: OGG obrigatório'),
+  mkRow('Spotify','Audio Ads','Direct IO','Companion','640×640px JPEG/PNG',''),
+  mkRow('Spotify','Audio Ads','Programático','Companion','300×250px JPEG',''),
+],
+'sp-video':[
+  mkRow('Spotify','Video Ads','Duração máxima','Vídeo','30 segundos',''),
+  mkRow('Spotify','Video Ads','Formatos','Vídeo','MOV/MP4','Máx 500MB'),
+  mkRow('Spotify','Video Ads','Retrato','Vídeo','9:16 · 720×1280px',''),
+  mkRow('Spotify','Video Ads','Paisagem','Vídeo','16:9 · 1280×720px','Desktop apenas'),
+],
+'tiktok':[
+  mkRow('TikTok','In-Feed','Formatos','Vídeo','MP4/MOV/MPEG/3GP/AVI','Máx 500MB'),
+  mkRow('TikTok','In-Feed','Duração','Vídeo','5–60s (ideal 21–34s)',''),
+  mkRow('TikTok','In-Feed','Resolução 9:16 mínima','Vídeo','540×960px',''),
+  mkRow('TikTok','In-Feed','Bitrate mínimo','Vídeo','516 kbps',''),
+  mkRow('TikTok','In-Feed','Foto de perfil','Perfil','98×98px JPG/PNG · 50KB',''),
+],
+'x':[
+  mkRow('X (Twitter)','X Ads','Limite','Texto','280c','-23c com link'),
+  mkRow('X (Twitter)','X Ads','Formatos','Imagem','PNG/JPEG','Máx 5MB'),
+  mkRow('X (Twitter)','X Ads','Paisagem','Imagem','800×418px',''),
+  mkRow('X (Twitter)','X Ads','Quadrada','Imagem','800×800px',''),
+  mkRow('X (Twitter)','X Ads','Formatos','Vídeo','MP4/MOV','Máx 1GB'),
+  mkRow('X (Twitter)','X Ads','9:16','Vídeo Vertical','720×1280 a 1080×1920px',''),
+  mkRow('X (Twitter)','X Ads','Cards','Carrossel','2 a 6','Mesma proporção'),
+  mkRow('X (Twitter)','X Ads','Imagens','Collection','1+5 · 800×800px · 3MB','Até 6 links'),
+],
+'kwai':[
+  mkRow('Kwai','In-Feed','Formatos','Vídeo','MP4/MOV','Máx 4GB · Até 30s'),
+  mkRow('Kwai','Imagem','Resolução','Imagem','1080×1920px','PNG/JPG · 300KB'),
+  mkRow('Kwai','Playable Ads','Formato','HTML','ZIP','Máx 5MB · alfanumérico'),
+],
+'push':[
+  mkRow('Push','Push Notification','Banner Desktop','Imagem','700×192px',''),
+  mkRow('Push','Push Notification','Banner Mobile','Imagem','320×100px',''),
+  mkRow('Push','Push Notification','Logo','Imagem','56×56px',''),
+  mkRow('Push','Push Notification','Título','Texto','25c',''),
+  mkRow('Push','Push Notification','Descrição','Texto','40c',''),
+  mkRow('Push','Push Notification','Antecedência','Operacional','48h','Máx 2 criativas'),
+],
+'p-globoplay':[
+  mkRow('Programática','GloboPlay','Bumper','Vídeo','≤6s',''),
+  mkRow('Programática','GloboPlay','Short','Vídeo','≤15s',''),
+  mkRow('Programática','GloboPlay','Long','Vídeo','≤180s',''),
+  mkRow('Programática','GloboPlay','Resolução','Vídeo','1920×1080px','29,97fps'),
+  mkRow('Programática','GloboPlay','Codec','Áudio','AAC Estéreo 128kbps','1º canal'),
+],
+'p-netflix':[
+  mkRow('Programática','Netflix','Duração','Vídeo','15" · 30" · 60"',''),
+  mkRow('Programática','Netflix','Resolução','Vídeo','1920×1080px','29,97fps'),
+  mkRow('Programática','Netflix','Codec','Áudio','AAC Estéreo 128kbps',''),
+],
+'p-disney':[
+  mkRow('Programática','Disney+','Duração','Vídeo','5s a 90s (múltiplos de 5)',''),
+  mkRow('Programática','Disney+','Resolução','Vídeo','1920×1080px','Máx 250MB'),
+  mkRow('Programática','Disney+','Frame rate','Vídeo','23,98/24/25/29,97/30fps',''),
+  mkRow('Programática','Disney+','Codec','Áudio','AAC-LC ≥192kbps · 48kHz',''),
+  mkRow('Programática','Disney+','Bordas/slates/countdowns','Restrição','Não permitidos',''),
+],
+'p-ctv':[
+  mkRow('Programática','Netflix CTV','Duração','Vídeo','10"/15"/20"/30"/60"',''),
+  mkRow('Programática','Netflix CTV','Resolução','Vídeo','1280×720 ou 1920×1080px',''),
+  mkRow('Programática','Netflix CTV','Prazo','Aprovação','7 dias úteis',''),
+  mkRow('Programática','GloboPlay CTV','Duração','Vídeo','15"/30"/180"',''),
+  mkRow('Programática','GloboPlay CTV','Resolução','Vídeo','1920×1080px H.264 29,97fps',''),
+],
+'p-banner':[
+  mkRow('Programática','Banner','300×250px','Estático','JPG/PNG/GIF · 150KB',''),
+  mkRow('Programática','Banner','728×90px','Estático','JPG/PNG/GIF · 150KB',''),
+  mkRow('Programática','Banner','160×600px','Estático','JPG/PNG/GIF · 150KB',''),
+  mkRow('Programática','Banner','300×600px','Estático','JPG/PNG/GIF · 150KB',''),
+  mkRow('Programática','Banner','320×50px','Estático','JPG/PNG/GIF · 150KB',''),
+  mkRow('Programática','Banner','970×250px','Estático','JPG/PNG/GIF · 150KB',''),
+  mkRow('Programática','Banner','Tamanho máximo','GIF animado','200KB','Máx 15s · 3 loops'),
+  mkRow('Programática','Banner','Tamanho máximo','HTML5','200KB','Sem assets externos · 24fps'),
+],
+'p-video':[
+  mkRow('Programática','Vídeo VAST','Não puláveis','Duração','6" · 15" · 30"',''),
+  mkRow('Programática','Vídeo VAST','Puláveis','Duração','30"+',''),
+  mkRow('Programática','Vídeo VAST','Codec','Vídeo','H.264 + AAC','Bitrate mín 1500kbps'),
+  mkRow('Programática','Vídeo VAST','Resoluções','Vídeo','1920×1080 ou 1280×720px',''),
+  mkRow('Programática','Vídeo VAST','Codec','Áudio','AAC Estéreo 128kbps',''),
+  mkRow('Programática','Vídeo VAST','Banner','Companion','300×250px recomendado',''),
+],
+'p-audio':[
+  mkRow('Programática','Áudio DAAST','Formatos','Áudio','MP3/OGG','Máx 30s · 128kbps'),
+  mkRow('Programática','Áudio DAAST','Sample rate','Áudio','44,1kHz ou 48kHz',''),
+  mkRow('Programática','Áudio DAAST','300×250px','Companion','JPG/PNG · 150KB',''),
+],
+'p-native':[
+  mkRow('Programática','Native Ads','Logo','Imagem','300×300px JPG/PNG · 200KB',''),
+  mkRow('Programática','Native Ads','Imagem principal','Imagem','1200×637px JPG/PNG · 1MB',''),
+  mkRow('Programática','Native Ads','Título','Texto','25c',''),
+  mkRow('Programática','Native Ads','Marca','Texto','25c',''),
+  mkRow('Programática','Native Ads','Texto','Texto','100c',''),
+  mkRow('Programática','Native Ads','CTA','Texto','25c',''),
+],
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let clientName = '';
+let activePlatforms = new Set();
+let activeSubs = new Set();
+
+// ============================================================
+// INTRO ANIMATION
+// ============================================================
+const tagline = 'Que bom te ver aqui na Esquina Digital';
+let taglineIdx = 0;
+
+function animateTagline() {
+  const el = document.getElementById('introTagline');
+  if (taglineIdx <= tagline.length) {
+    el.textContent = tagline.slice(0, taglineIdx);
+    taglineIdx++;
+    setTimeout(animateTagline, 55);
+  }
+}
+
+function runIntroCounter() {
+  const counter = document.getElementById('introCounter');
+  const bar = document.getElementById('introBar');
+  let pct = 0;
+  const start = performance.now();
+  const duration = 2500;
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const eased = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    pct = Math.round(eased * 100);
+    counter.textContent = pct + '%';
+    bar.style.width = pct + '%';
+    if (t < 1) {
+      requestAnimationFrame(step);
+    } else {
+      counter.textContent = '100%';
+      bar.style.width = '100%';
+      setTimeout(showClientInput, 400);
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+function showClientInput() {
+  document.getElementById('introCounter').style.display = 'none';
+  document.getElementById('introBar').parentElement.style.display = 'none';
+  document.getElementById('introInputWrap').style.display = 'flex';
+  setTimeout(() => document.getElementById('clientInput').focus(), 100);
+}
+
+function confirmClient() {
+  clientName = document.getElementById('clientInput').value.trim() || '';
+  launchApp();
+}
+
+function skipIntro() {
+  clientName = '';
+  launchApp();
+}
+
+function launchApp() {
+  updateClientDisplay();
+  const iris = document.getElementById('iris');
+  iris.classList.add('closed');
+  setTimeout(() => {
+    document.getElementById('intro').style.display = 'none';
+    iris.style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+  }, 950);
+}
+
+document.getElementById('clientInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmClient();
+});
+
+setTimeout(animateTagline, 600);
+setTimeout(runIntroCounter, 400);
+
+// ============================================================
+// CLIENT DISPLAY
+// ============================================================
+function updateClientDisplay() {
+  const badge = document.getElementById('clientBadge');
+  const phClient = document.getElementById('phClient');
+  const phDate = document.getElementById('phDate');
+  phDate.textContent = new Date().toLocaleDateString('pt-BR');
+  if (clientName) {
+    badge.textContent = clientName;
+    badge.classList.add('visible');
+    phClient.textContent = 'Cliente: ' + clientName;
+  } else {
+    badge.classList.remove('visible');
+    phClient.textContent = '';
+  }
+}
+
+// ============================================================
+// BUILD CHIPS
+// ============================================================
+function buildChips() {
+  const grid = document.getElementById('chipsGrid');
+  grid.innerHTML = '';
+  PLATFORMS.forEach(plat => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.dataset.id = plat.id;
+    chip.innerHTML = `
+      <div class="chip-check"><svg viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      ${plat.svg}
+      <span class="chip-name">${plat.name}</span>
+    `;
+    chip.addEventListener('click', () => togglePlatform(plat.id));
+    grid.appendChild(chip);
+  });
+}
+
+// ============================================================
+// BUILD SUB-PANEL
+// ============================================================
+function buildSubPanel() {
+  const container = document.getElementById('subGroups');
+  container.innerHTML = '';
+  let anyActive = false;
+  PLATFORMS.forEach(plat => {
+    if (!plat.hasSubs) return;
+    if (!activePlatforms.has(plat.id)) return;
+    anyActive = true;
+    const group = document.createElement('div');
+    group.className = 'sub-group';
+    const header = document.createElement('div');
+    header.className = 'sub-group-header';
+    const smallSvg = plat.svg.replace(/width="28" height="28"/g,'width="20" height="20"');
+    header.innerHTML = `${smallSvg}<span>${plat.name}</span>`;
+    const pillsRow = document.createElement('div');
+    pillsRow.className = 'pills-row';
+    plat.subs.forEach(sub => {
+      const pill = document.createElement('div');
+      pill.className = 'pill' + (activeSubs.has(sub.val) ? ' active' : '');
+      pill.dataset.plat = sub.val;
+      pill.innerHTML = `<span class="pill-dot"></span>${sub.label}`;
+      pill.addEventListener('click', () => toggleSub(sub.val));
+      pillsRow.appendChild(pill);
+    });
+    group.appendChild(header);
+    group.appendChild(pillsRow);
+    container.appendChild(group);
+    const divider = document.createElement('div');
+    divider.className = 'sub-divider';
+    container.appendChild(divider);
+  });
+  document.getElementById('subPanel').classList.toggle('open', anyActive);
+}
+
+// ============================================================
+// TOGGLE PLATFORM
+// ============================================================
+function togglePlatform(platId) {
+  const plat = PLATFORMS.find(p => p.id === platId);
+  if (!plat) return;
+  if (activePlatforms.has(platId)) {
+    activePlatforms.delete(platId);
+    plat.subs.forEach(s => activeSubs.delete(s.val));
+  } else {
+    activePlatforms.add(platId);
+    plat.subs.forEach(s => activeSubs.add(s.val));
+  }
+  refreshChips();
+  buildSubPanel();
+  renderOutput();
+}
+
+function toggleSub(val) {
+  if (activeSubs.has(val)) {
+    activeSubs.delete(val);
+  } else {
+    activeSubs.add(val);
+  }
+  document.querySelectorAll(`.pill[data-plat="${val}"]`).forEach(p => {
+    p.classList.toggle('active', activeSubs.has(val));
+  });
+  renderOutput();
+}
+
+function refreshChips() {
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.classList.toggle('active', activePlatforms.has(chip.dataset.id));
+  });
+}
+
+// ============================================================
+// RENDER OUTPUT
+// ============================================================
+function renderOutput() {
+  const section = document.getElementById('outputSection');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('countNum');
+  section.innerHTML = '';
+  const selected = [...activeSubs];
+  count.textContent = selected.length;
+  if (selected.length === 0) {
+    empty.classList.add('visible');
+    return;
+  }
+  empty.classList.remove('visible');
+  selected.forEach(val => {
+    const spec = SPECS[val];
+    if (!spec) return;
+    const plat = PLATFORMS.find(p => p.id === spec.platId);
+    const block = document.createElement('div');
+    block.className = 'pblock';
+    block.dataset.val = val;
+    const headerSvg = plat ? plat.svg.replace(/width="28" height="28"/g,'width="22" height="22"') : '';
+    block.innerHTML = `
+      <div class="pblock-header">
+        ${headerSvg}
+        <span class="pblock-title">${spec.title}</span>
+        <span class="pblock-subtitle">${spec.subtitle}</span>
+      </div>
+      <div class="cards-grid">${spec.cards.map(renderCard).join('')}</div>
+    `;
+    section.appendChild(block);
+  });
+}
+
+function renderCard(card) {
+  const badgeMap = {video:'badge-video',img:'badge-img',audio:'badge-audio',text:'badge-text'};
+  const badgeLabel = {video:'Vídeo',img:'Imagem',audio:'Áudio',text:'Texto'};
+  const badges = (card.badges||[]).map(b=>`<span class="badge ${badgeMap[b]||''}">${badgeLabel[b]||b}</span>`).join('');
+  const propBoxes = (card.props||[]).map(p=>`<div class="prop-box ${p.cls}"></div><span class="prop-label">${p.label}</span>`).join('');
+  const groups = (card.groups||[]).map(g=>{
+    const rows = g.rows.map(r=>`<div class="spec-row"><span class="spec-key">${r[0]}</span><span class="spec-val">${r[1]}</span></div>`).join('');
+    return `<div class="spec-group"><div class="spec-group-title">${g.title}</div>${rows}</div>`;
+  }).join('');
+  const note = card.note ? `<div class="spec-note">${card.note}</div>` : '';
+  return `<div class="spec-card">
+    <div class="card-title">${card.title}</div>
+    ${badges?`<div class="badges">${badges}</div>`:''}
+    ${propBoxes?`<div class="prop-boxes">${propBoxes}</div>`:''}
+    ${groups}
+    ${note}
+  </div>`;
+}
+
+// ============================================================
+// XLSX / CSV EXPORT
+// ============================================================
+function exportXLSX() {
+  const selected = [...activeSubs];
+  if (selected.length === 0) { alert('Selecione ao menos um formato antes de exportar.'); return; }
+  let rows = [];
+  selected.forEach(val => { const d = xlsxData[val]; if (d) rows = rows.concat(d); });
+  if (rows.length === 0) { alert('Nenhum dado encontrado para os formatos selecionados.'); return; }
+
+  const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const safeName = (clientName||'cliente').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  const filename = `checklist-midiakit-${safeName}-${dateStr}`;
+
+  const cols = ['Plataforma','Formato','Criativo','Especificação','Valor','Obs. Técnica','Nome do Arquivo','Responsável','Prazo de Entrega','Status','Aprovado'];
+  const dateLabel = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  const clientLabel = clientName || 'Cliente';
+
+  // Tenta XLSX via CDN; se não disponível, cai em CSV (abre no Excel normalmente)
+  if (typeof XLSX !== 'undefined') {
+    // Cabeçalho Esquina + dados
+    const aoa = [
+      ['ESQUINA DIGITAL — Mídia Kit', ...Array(10).fill('')],
+      [`Briefing de Produção · ${clientLabel}`, ...Array(10).fill('')],
+      [`Gerado em: ${dateLabel}`, ...Array(10).fill('')],
+      Array(11).fill(''),
+      cols,
+      ...rows.map(r => cols.map(h => r[h] ?? ''))
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    // Mescla células do cabeçalho
+    ws['!merges'] = [
+      {s:{r:0,c:0},e:{r:0,c:10}},
+      {s:{r:1,c:0},e:{r:1,c:10}},
+      {s:{r:2,c:0},e:{r:2,c:10}},
+    ];
+    ws['!cols'] = [{wch:16},{wch:22},{wch:26},{wch:20},{wch:22},{wch:28},{wch:26},{wch:18},{wch:18},{wch:12},{wch:10}];
+    ws['!rows'] = [{hpt:22},{hpt:18},{hpt:14}];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Briefing de Produção');
+    XLSX.writeFile(wb, `${filename}.xlsx`);
+  } else {
+    // Fallback CSV com BOM (abre corretamente no Excel)
+    const esc = v => `"${String(v||'').replace(/"/g,'""')}"`;
+    const csvLines = [
+      [esc('ESQUINA DIGITAL — Mídia Kit')].join(';'),
+      [esc(`Briefing de Produção · ${clientLabel}`)].join(';'),
+      [esc(`Gerado em: ${dateLabel}`)].join(';'),
+      '',
+      cols.map(esc).join(';'),
+      ...rows.map(r => cols.map(h => esc(r[h])).join(';'))
+    ];
+    const blob = new Blob(['﻿' + csvLines.join('\r\n')], {type:'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${filename}.csv`; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+}
+
+// ============================================================
+// EXPORT PACKAGE
+// ============================================================
+function exportPackage() {
+  exportXLSX();
+  setTimeout(() => {
+    alert('O checklist foi baixado. Agora salve o PDF.');
+    window.print();
+  }, 800);
+}
+
+// ============================================================
+// CLEAR
+// ============================================================
+function clearAll() {
+  activePlatforms.clear();
+  activeSubs.clear();
+  refreshChips();
+  buildSubPanel();
+  renderOutput();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+buildChips();
+buildSubPanel();
+renderOutput();
+document.getElementById('phDate').textContent = new Date().toLocaleDateString('pt-BR');
+</script>
+</body>
+</html>
