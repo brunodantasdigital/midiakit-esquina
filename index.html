@@ -26,7 +26,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 /* INTRO */
 #intro{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0a3e 0%,#07020f 70%)}
 .intro-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);backdrop-filter:var(--blur);border-radius:24px;padding:48px 56px;max-width:520px;width:90%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:24px}
-.intro-logo{width:260px;display:block;margin:0 auto 16px;filter:brightness(0) invert(1);clip-path:inset(0 100% 0 0);transition:none}.site-logo{height:28px;width:auto;display:block;filter:brightness(0) invert(1)}
+.intro-logo{width:260px;display:block;margin:0 auto 16px;filter:brightness(0) invert(1);opacity:0;transition:none}.site-logo{height:28px;width:auto;display:block;filter:brightness(0) invert(1)}
 .intro-tagline{font-size:15px;color:var(--text2);min-height:24px;letter-spacing:.01em}
 .intro-counter{font-size:48px;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
 .intro-bar-wrap{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden}
@@ -170,6 +170,23 @@ footer{text-align:center;padding:32px;color:var(--text2);font-size:12px;border-t
 /* PRINT HEADER */
 .print-header{display:none}
 
+/* MOBILE */
+@media(max-width:600px){
+  .site-header{padding:10px 16px}
+  .hero{padding:40px 16px 24px}
+  .hero h1{font-size:clamp(26px,7vw,38px)}
+  .selector-section{padding:0 12px 32px}
+  .chips-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .chip{padding:10px 6px 9px;gap:5px}
+  .chip-name{font-size:10px}
+  .actions-bar{flex-direction:column;align-items:stretch;gap:8px;padding:14px 14px}
+  .actions-bar .count-label{text-align:center;font-size:13px}
+  .actions-bar .btn{justify-content:center;padding:12px 10px;font-size:13px}
+  .sub-panel-inner{padding:14px 14px}
+  .intro-card{padding:32px 20px 28px;max-width:92vw}
+  .intro-logo{width:180px}
+}
+
 /* PRINT */
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
@@ -283,6 +300,13 @@ footer{text-align:center;padding:32px;color:var(--text2);font-size:12px;border-t
       <button class="btn btn-secondary" onclick="exportXLSX()">Exportar Planilha</button>
       <button class="btn btn-secondary" onclick="window.print()">Exportar PDF</button>
       <button class="btn btn-ghost" onclick="clearAll()">Limpar</button>
+      <button class="btn btn-secondary" onclick="gerarLink()">🔗 Gerar Link</button>
+    </div>
+    <!-- link output -->
+    <div id="linkBox" style="display:none;margin-top:12px;padding:14px 18px;background:rgba(168,85,247,.08);border:1.5px solid rgba(168,85,247,.35);border-radius:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap">
+      <input id="linkOut" readonly style="flex:1;min-width:200px;background:transparent;border:none;color:var(--text);font-size:12px;font-family:monospace;outline:none;cursor:text" value="">
+      <button onclick="copiarLink()" style="background:var(--accent2);border:none;color:#fff;font-size:12px;font-weight:700;padding:7px 16px;border-radius:8px;cursor:pointer;white-space:nowrap">Copiar</button>
+      <span id="linkCopied" style="font-size:11px;color:#a3e635;display:none">✓ Copiado!</span>
     </div>
   </section>
 
@@ -298,7 +322,7 @@ footer{text-align:center;padding:32px;color:var(--text2);font-size:12px;border-t
   <footer>Esquina Digital · Mídia Kit · Especificações técnicas atualizadas</footer>
 </div>
 
-<script src="assets/xlsx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 // ============================================================
 // PLATFORM DEFINITIONS
@@ -981,13 +1005,13 @@ function runIntroCounter() {
     const remain = 100 - pct;
     counter.textContent = pct + '%';
     bar.style.width     = pct + '%';
-    logo.style.clipPath = 'inset(0 ' + remain + '% 0 0)';
+    logo.style.opacity = (pct / 100).toFixed(3);
     if (t < 1) {
       requestAnimationFrame(step);
     } else {
       counter.textContent = '100%';
       bar.style.width     = '100%';
-      logo.style.clipPath = 'inset(0 0% 0 0)';
+      logo.style.opacity = '1';
       setTimeout(showClientInput, 500);
     }
   }
@@ -1036,6 +1060,33 @@ document.getElementById('clientInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') confirmClient();
 });
 
+
+// ============================================================
+// GERAR LINK
+// ============================================================
+function gerarLink() {
+  if (activeSubs.size === 0) { alert('Selecione pelo menos uma plataforma.'); return; }
+  const platIds = [...activePlatforms].join(',');
+  const nome = clientName || '';
+  const base = window.location.origin + window.location.pathname;
+  const params = new URLSearchParams();
+  if (nome) params.set('cliente', nome);
+  if (platIds) params.set('plataformas', platIds);
+  const link = base + '?' + params.toString();
+  const box = document.getElementById('linkBox');
+  document.getElementById('linkOut').value = link;
+  box.style.display = 'flex';
+  document.getElementById('linkCopied').style.display = 'none';
+}
+
+function copiarLink() {
+  const val = document.getElementById('linkOut').value;
+  navigator.clipboard.writeText(val).then(() => {
+    const el = document.getElementById('linkCopied');
+    el.style.display = 'inline';
+    setTimeout(() => el.style.display = 'none', 2000);
+  });
+}
 
 // ============================================================
 // LOCALSTORAGE — salva e restaura estado
